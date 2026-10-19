@@ -81,6 +81,17 @@ supabase/migrations/0001_init.sql     ตาราง สิทธิ์ (RLS) �
 2. **อีเมล:** อีเมลที่ Supabase ส่งเองถูกจำกัดไว้แค่ไม่กี่ฉบับต่อชั่วโมง ใช้ทดสอบได้ แต่ก่อนเปิดจริงให้ต่อ SMTP ของตัวเอง (เช่น Resend มีแผนฟรี) ใน Authentication → SMTP
 3. **ใส่รหัสในอีเมล (ถ้าต้องการ):** Authentication → Email Templates → Magic Link เพิ่ม `{{ .Token }}` ลงในอีเมล คนที่เปิดอีเมลคนละเครื่องจะพิมพ์รหัสแทนกดลิงก์ได้
 
+## แอดมิน (`/admin`)
+
+- เข้าได้เฉพาะอีเมลที่อยู่ในตาราง `admins` เท่านั้น (เก็บในฐานข้อมูล ไม่ใส่ในโค้ด เพราะ repo เป็น public) คนอื่นที่เปิดหน้านี้จะเจอหน้า 404
+- ทำได้: ปิดรายงานประกาศ, ซ่อนประกาศ, ติดป้าย "ตรวจแล้ว", ใส่ราคากลาง, ยืนยันตัวตนคนขาย, เปิด VIP/Pro 30 วัน
+- ต้องตั้ง secret `SUPABASE_SERVICE_ROLE_KEY` ใน Cloudflare ก่อน หน้านี้ถึงจะใช้ได้
+- เพิ่มหรือลบแอดมินใน Supabase SQL Editor:
+  ```sql
+  insert into public.admins (email) values ('someone@example.com');
+  delete from public.admins where email = 'someone@example.com';
+  ```
+
 ## ยังไม่ได้ทำ (ขั้นต่อไป)
 
 - LINE Login (ต่อแบบ custom OIDC) และเบอร์โทร OTP (ต้องมีผู้ให้บริการ SMS ซึ่งเสียเงิน)
