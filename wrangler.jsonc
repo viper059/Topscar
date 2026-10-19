@@ -10,7 +10,7 @@
   // Photos are in Supabase Storage for now. When moving to R2, create the bucket and uncomment:
   // "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "tops-car-photos" }],
   "vars": {
-    "NEXT_PUBLIC_SITE_URL": "https://tops-car.com",
+    "NEXT_PUBLIC_SITE_URL": "https://tops-car.thanaruek.workers.dev",
     "NEXT_PUBLIC_IMG_URL": "https://vawowlwebzpmffgenenl.supabase.co/storage/v1/object/public/listing-photos",
     "GUEST_REVEAL_LIMIT": "15",
     "NEXT_PUBLIC_SUPABASE_URL": "https://vawowlwebzpmffgenenl.supabase.co",
