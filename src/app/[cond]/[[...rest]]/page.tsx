@@ -16,6 +16,7 @@ import { Crumbs, HubLinks, JsonLd } from "@/components/Seo";
 import LoanCalc from "@/components/LoanCalc";
 import ContactBox from "@/components/ContactBox";
 import ViewBeacon from "@/components/ViewBeacon";
+import ReportButton from "@/components/ReportButton";
 
 export const dynamic = "force-dynamic";
 
@@ -180,6 +181,7 @@ async function ListingPage({ l, hub }: { l: Listing; hub: Hub }) {
           </div>
           <aside style={{ display: "grid", gap: 16, alignContent: "start", minWidth: 0 }}>
             <ContactBox listingId={l.id} sold={sold} />
+            {!sold && <ReportButton listingId={l.id} />}
             <PayBox l={l} />
             {!sold && canFinance(l) && (
               <LoanCalc price={l.price} downPct={(downOf(l) / l.price) * 100} years={Math.round((l.pay.months || 60) / 12)} rate={l.pay.rate ?? defaultRate(l)} fromShop={Boolean(l.pay.monthly)} />
