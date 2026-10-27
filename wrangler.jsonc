@@ -1,16 +1,20 @@
 {
-  // Cloudflare Workers config for tops-car.com (built with @opennextjs/cloudflare)
+  // Cloudflare Workers config for topscar.info (built with @opennextjs/cloudflare)
   "name": "tops-car",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
-  // Runs on <name>.<account>.workers.dev for now. After registering the domain, uncomment:
-  // "routes": [{ "pattern": "tops-car.com", "custom_domain": true }],
+  // Main domain. The old tops-car.<account>.workers.dev address stays on and redirects here (see src/middleware.ts).
+  "routes": [
+    { "pattern": "topscar.info", "custom_domain": true },
+    { "pattern": "www.topscar.info", "custom_domain": true }
+  ],
+  "workers_dev": true,
   // Photos are in Supabase Storage for now. When moving to R2, create the bucket and uncomment:
   // "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "tops-car-photos" }],
   "vars": {
-    "NEXT_PUBLIC_SITE_URL": "https://tops-car.thanaruek.workers.dev",
+    "NEXT_PUBLIC_SITE_URL": "https://topscar.info",
     "NEXT_PUBLIC_IMG_URL": "https://vawowlwebzpmffgenenl.supabase.co/storage/v1/object/public/listing-photos",
     "GUEST_REVEAL_LIMIT": "15",
     "NEXT_PUBLIC_SUPABASE_URL": "https://vawowlwebzpmffgenenl.supabase.co",
