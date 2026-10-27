@@ -1,9 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { findListings } from "@/lib/data";
 import { CarGrid } from "@/components/CarCard";
 import { HubLinks } from "@/components/Seo";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const TRY = ["รถตู้ มือสอง ใกล้อยุธยา", "ฟรีดาวน์ ผ่อนไม่เกิน 9 พัน", "กระบะ ดาวน์ไม่เกิน 1 แสน", "ผ่อนกับร้าน"];
 

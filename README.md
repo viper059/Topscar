@@ -1,6 +1,6 @@
-# Tops Car (tops-car.com)
+# Tops Car (topscar.info)
 
-ตลาดรถใหม่ป้ายแดงและรถมือสอง ทำด้วย Next.js 15 + Supabase + Cloudflare (Workers + R2)
+ตลาดรถใหม่ป้ายแดงและรถมือสอง ทำด้วย Next.js 16 + Supabase + Cloudflare Workers
 
 ถ้ายังไม่ได้ใส่คีย์ Supabase เว็บจะรันด้วยรถตัวอย่าง 16 คัน (`src/lib/seed.ts`) จึงลองเว็บได้ทันที
 
@@ -42,17 +42,17 @@ npm run dev                  # เปิด http://localhost:3000
 
 ## ตั้งค่าใช้งานจริง (ชุดฟรี)
 
-1. **โดเมน:** จด tops-car.com แล้วตั้ง DNS ไว้ที่ Cloudflare
+1. **โดเมน:** topscar.info (ซื้อที่ GoDaddy, nameserver ชี้มา Cloudflare แล้ว) ผูกกับ Worker ผ่าน `routes` ใน `wrangler.jsonc` ส่วน www และ *.workers.dev จะ redirect 301 มาที่ topscar.info
 2. **Supabase:** โปรเจกต์ Topscar `vawowlwebzpmffgenenl` (https://vawowlwebzpmffgenenl.supabase.co) **ติดตั้งแล้ว 2026-10-19**: รัน `0001_init.sql` และ `0002_harden.sql` แล้ว Security Advisor ไม่มี error ส่วน publishable key ใส่ไว้ใน `.env.example` และ `wrangler.jsonc` แล้ว (คีย์นี้เปิดเผยได้) ถ้าจะสร้างฐานข้อมูลใหม่ ให้รันไฟล์ใน `supabase/migrations/` ตามลำดับ
-3. **R2:** สร้าง bucket `tops-car-photos` → เปิด public access ผ่านโดเมน `img.tops-car.com`
+3. **รูป:** ตอนนี้อยู่ใน Supabase Storage ถ้าย้ายไป R2 ทีหลัง ใช้โดเมน `img.topscar.info`
 4. **คีย์:** แก้ `wrangler.jsonc` → `vars` แล้วตั้ง secret
    ```bash
    npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
    npx wrangler secret put REVEAL_SALT
    ```
    ใส่ `NEXT_PUBLIC_SUPABASE_URL` และ `NEXT_PUBLIC_SUPABASE_ANON_KEY` ใน `.env.local` ก่อน build (ค่า `NEXT_PUBLIC_*` ถูกฝังตอน build)
-5. **Deploy:** `npm run cf:deploy`
-6. **Google:** เพิ่มเว็บใน Search Console → ส่ง `https://tops-car.com/sitemap.xml`
+5. **Deploy:** push ขึ้น GitHub branch main แล้ว Cloudflare Workers Builds จะ build และ deploy ให้อัตโนมัติ
+6. **Google:** เพิ่มเว็บใน Search Console → ส่ง `https://topscar.info/sitemap.xml`
 7. **กันโปรเจกต์ Supabase ฟรีหลับ:** แผนฟรีพักโปรเจกต์ถ้าไม่มีการใช้งาน 1 สัปดาห์ เว็บที่มีคนเข้าทุกวันจะไม่โดน ถ้าช่วงแรกคนยังน้อย ให้ตั้ง Cloudflare Cron เรียก `/sitemap.xml` วันละครั้ง
 
 ## ไฟล์หลัก
@@ -95,8 +95,8 @@ supabase/migrations/0001_init.sql     ตาราง สิทธิ์ (RLS) �
 ## ยังไม่ได้ทำ (ขั้นต่อไป)
 
 - LINE Login (ต่อแบบ custom OIDC) และเบอร์โทร OTP (ต้องมีผู้ให้บริการ SMS ซึ่งเสียเงิน)
-- โปรโมท/VIP + จ่ายเงินพร้อมเพย์, ปุ่มบันทึกรถและรายงานประกาศบนเว็บจริง
+- โปรโมท/VIP + จ่ายเงินพร้อมเพย์, ปุ่มบันทึกรถบนเว็บจริง
 - หน้าแก้ไขประกาศ (ตอนนี้ลบแล้วลงใหม่)
-- งานคำนวณ `market_price` ทุกคืน และงาน `expire_listings()`
+- งานคำนวณ `market_price` ทุกคืน (งาน `expire_listings()` ตั้งใน pg_cron แล้ว)
 - ภาพ Open Graph อัตโนมัติสำหรับรถที่ยังไม่มีรูป
 - ตอนนี้หน้าเว็บสร้างใหม่ทุกครั้งที่มีคนเข้า พอคนเยอะขึ้นค่อยเปิด cache ของ OpenNext
