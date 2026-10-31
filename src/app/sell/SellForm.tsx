@@ -5,6 +5,7 @@ import { PROVINCES } from "@/lib/provinces";
 import { BODY_TH, type BodyType } from "@/lib/types";
 import { MAX_PHOTOS, shrinkPhoto } from "@/lib/photos";
 import { baht } from "@/lib/money";
+import { PLAN_LABEL } from "@/lib/plans";
 
 const BRANDS = ["Toyota", "Isuzu", "Honda", "Mitsubishi", "Nissan", "Mazda", "Ford", "MG", "BYD", "Suzuki", "Hyundai", "Mercedes-Benz", "BMW", "Chevrolet", "Kia", "GWM", "Neta", "Volvo"];
 const FUELS = ["ดีเซล", "เบนซิน", "ไฮบริด", "ไฟฟ้า", "แก๊ส LPG/NGV"];
@@ -168,7 +169,7 @@ export default function SellForm({ userId, province, plan }: { userId: string; p
           <label style={lab}>เบอร์โทร<input name="phone" className="field" type="tel" inputMode="tel" maxLength={20} placeholder="08x-xxx-xxxx" /></label>
           <label style={lab}>LINE ID<input name="line" className="field" maxLength={40} placeholder="ไม่บังคับ" /></label>
         </div>
-        <p className="note">เบอร์และ LINE จะไม่อยู่บนหน้าประกาศ จะแสดงเมื่อผู้ซื้อกดดูเท่านั้น ประกาศแสดง 60 วัน ต่ออายุฟรีในหน้าบัญชีของฉัน แพ็กเกจปัจจุบัน: {plan === "free" ? "ฟรี (ลงพร้อมกันได้ 5 คัน)" : plan.toUpperCase()}</p>
+        <p className="note">เบอร์และ LINE จะไม่อยู่บนหน้าประกาศ จะแสดงเมื่อผู้ซื้อกดดูเท่านั้น ประกาศแสดง 60 วัน ต่ออายุฟรีในหน้าบัญชีของฉัน แพ็กเกจปัจจุบัน: {PLAN_LABEL[plan as keyof typeof PLAN_LABEL] ?? plan.toUpperCase()}</p>
         <label style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
           <input type="checkbox" required style={{ marginTop: 4 }} />
           <span className="note">ยืนยันว่าเป็นเจ้าของรถหรือได้รับอนุญาตให้ขาย ข้อมูลเป็นความจริง และแจ้งแล้วหากรถติดไฟแนนซ์หรือเล่มไม่อยู่กับผู้ขาย ตาม<a href="/terms" target="_blank">ข้อตกลงการใช้งาน</a></span>

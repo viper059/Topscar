@@ -118,7 +118,7 @@ export default function AdminPanel({ sellers: s0, listings: l0, reports: r0 }: {
                   <td style={td}><input type="checkbox" checked={s.verified} aria-label="ยืนยันตัวตนแล้ว" onChange={(e) => run({ action: "verify", profileId: s.id, value: e.target.checked }, () => setS(s.id, { verified: e.target.checked }), e.target.checked ? "ยืนยันตัวตนแล้ว" : "ยกเลิกการยืนยันตัวตนแล้ว")} /></td>
                   <td style={td}>
                     <select className="field" style={{ width: "auto" }} value={s.plan} aria-label="แพ็กเกจ" onChange={(e) => { const v = e.target.value; run({ action: "plan", profileId: s.id, value: v }, () => setS(s.id, { plan: v }), v === "free" ? "เปลี่ยนเป็นแพ็กเกจฟรีแล้ว" : `เปิด ${v.toUpperCase()} 30 วันแล้ว`); }}>
-                      <option value="free">ฟรี (5 คัน)</option><option value="vip">VIP (30 คัน)</option><option value="pro">Pro (ไม่จำกัด)</option>
+                      <option value="free">ฟรี (1 คัน)</option><option value="vip">VIP (15 คัน)</option><option value="pro">Pro (ไม่จำกัด)</option>
                     </select>
                   </td>
                 </tr>

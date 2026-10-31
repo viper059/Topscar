@@ -5,11 +5,12 @@ import { currentProfile, safeNext, userDb } from "@/lib/server";
 import ComingSoon from "@/components/ComingSoon";
 import Onboarding from "./Onboarding";
 import MyListings, { SignOut, type MyRow } from "./MyListings";
+import { PLAN_LABEL } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "บัญชีของฉัน", robots: { index: false, follow: false } };
 
-const PLAN_TH = { free: "สมาชิกฟรี (ลงพร้อมกันได้ 5 คัน)", vip: "VIP เต็นท์ (30 คัน)", pro: "VIP Pro (ไม่จำกัด)" } as const;
+const PLAN_TH = PLAN_LABEL;
 
 export default async function Account({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return <ComingSoon title="บัญชีของฉัน" text="ยังไม่ได้ต่อฐานข้อมูล ตั้งค่า Supabase ก่อน" />;
