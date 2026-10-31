@@ -11,6 +11,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const latest = (list: typeof items) => new Date(Math.max(...list.map((l) => +new Date(l.postedAt)), 0));
   return [
     { url: abs("/"), lastModified: latest(live), changeFrequency: "hourly", priority: 1 },
+    { url: abs("/vip"), changeFrequency: "monthly", priority: 0.4 },
+    { url: abs("/terms"), changeFrequency: "yearly", priority: 0.2 },
+    { url: abs("/privacy"), changeFrequency: "yearly", priority: 0.2 },
     ...hubsFor(live).map((h) => ({ url: abs(hubPath(h)), lastModified: latest(live), changeFrequency: "daily" as const, priority: h.model ? 0.7 : 0.8 })),
     ...items.map((l) => ({
       url: abs(listingPath(l)),

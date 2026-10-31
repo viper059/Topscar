@@ -184,7 +184,7 @@ async function ListingPage({ l, hub }: { l: Listing; hub: Hub }) {
             {!sold && <ReportButton listingId={l.id} />}
             <PayBox l={l} />
             {!sold && canFinance(l) && (
-              <LoanCalc price={l.price} downPct={(downOf(l) / l.price) * 100} years={Math.round((l.pay.months || 60) / 12)} rate={l.pay.rate ?? defaultRate(l)} fromShop={Boolean(l.pay.monthly)} />
+              <LoanCalc price={l.price} downPct={(downOf(l) / l.price) * 100} years={Math.round((l.pay.months || 60) / 12)} rate={l.pay.rate ?? defaultRate(l)} fromShop={Boolean(l.pay.monthly)} cond={l.cond} />
             )}
           </aside>
         </div>

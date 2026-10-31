@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
-import { baht, flatRateLoan } from "@/lib/money";
+import { baht, effectiveRate, flatRateLoan, HP_CAP } from "@/lib/money";
 
-export default function LoanCalc({ price, downPct, years, rate, fromShop }: { price: number; downPct: number; years: number; rate: number; fromShop: boolean }) {
+export default function LoanCalc({ price, downPct, years, rate, fromShop, cond }: { price: number; downPct: number; years: number; rate: number; fromShop: boolean; cond: "new" | "used" }) {
   const [dp, setDp] = useState(Math.round(downPct));
   const [y, setY] = useState(Math.min(7, Math.max(4, years)));
   const [r, setR] = useState(rate);
   const L = flatRateLoan(price, dp, y, r || 0);
+  const eff = effectiveRate(L.financed, L.monthly, y * 12);
+  const cap = HP_CAP[cond];
   return (
     <div className="box soft calc">
       <h2>คำนวณค่างวด</h2>
@@ -27,7 +29,13 @@ export default function LoanCalc({ price, downPct, years, rate, fromShop }: { pr
       </div>
       <div className="r"><span>ยอดจัด</span><output>฿{baht(L.financed)}</output><span>ดอกเบี้ยรวม</span><output>฿{baht(L.interest)}</output></div>
       <div><div className="note">ค่างวดต่อเดือน (รวม VAT 7%)</div><output className="big">฿{baht(L.monthlyWithVat)}</output></div>
-      <p className="note">คิดแบบดอกเบี้ยคงที่ (flat rate) ตามที่ไฟแนนซ์รถในไทยใช้ ตัวเลขจริงขึ้นกับไฟแนนซ์และโปรของร้าน</p>
+      <div className="r"><span>ดอกเบี้ยแท้จริง (ลดต้นลดดอก)</span><output>ประมาณ {eff.toFixed(2)}% ต่อปี</output></div>
+      {eff > cap && (
+        <p className="note" role="alert" style={{ color: "var(--warn)", fontWeight: 600 }}>
+          สูงกว่าเพดานดอกเบี้ยเช่าซื้อ{cond === "new" ? "รถใหม่" : "รถมือสอง"} {cap}% ต่อปี ตามประกาศ สคบ. ควรสอบถามไฟแนนซ์หรือร้านก่อนทำสัญญา
+        </p>
+      )}
+      <p className="note">ตัวเลขประมาณการ คิดแบบดอกเบี้ยคงที่ (flat rate) ตามที่ไฟแนนซ์รถในไทยใช้ ตัวเลขจริงขึ้นกับไฟแนนซ์และโปรของร้าน</p>
     </div>
   );
 }

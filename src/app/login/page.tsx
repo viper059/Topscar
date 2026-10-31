@@ -17,7 +17,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
       <p className="note" style={{ maxWidth: "60ch" }}>บัญชีเดียวใช้ได้ทั้งซื้อและขาย ลงประกาศขายรถฟรี ดูเบอร์ผู้ขายได้ไม่จำกัด และดูสถิติว่ามีคนสนใจรถของคุณกี่คน</p>
       {sp.error && <p role="alert" style={{ color: "var(--warn)", margin: 0 }}>ลิงก์เข้าสู่ระบบหมดอายุหรือเปิดคนละเครื่อง ลองขอรหัสใหม่อีกครั้ง</p>}
       <LoginForm next={next} />
-      <p className="note">การเข้าสู่ระบบถือว่ายอมรับ<Link href="/privacy">นโยบายความเป็นส่วนตัว</Link></p>
+      <p className="note">การเข้าสู่ระบบถือว่ายอมรับ<Link href="/terms">ข้อตกลงการใช้งาน</Link>และ<Link href="/privacy">นโยบายความเป็นส่วนตัว</Link></p>
     </main>
   );
 }

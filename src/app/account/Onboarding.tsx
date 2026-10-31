@@ -47,7 +47,7 @@ export default function Onboarding({ userId, next }: { userId: string; next: str
       </select>
       <label style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
         <input type="checkbox" required style={{ marginTop: 4 }} />
-        <span className="note">ยอมรับข้อตกลงและ<Link href="/privacy" target="_blank">นโยบายความเป็นส่วนตัว (PDPA)</Link> ยินยอมให้แสดงเบอร์โทรเมื่อผู้ซื้อกดดู</span>
+        <span className="note">ยอมรับ<Link href="/terms" target="_blank">ข้อตกลงการใช้งาน</Link>และ<Link href="/privacy" target="_blank">นโยบายความเป็นส่วนตัว (PDPA)</Link> ยินยอมให้แสดงเบอร์โทรเมื่อผู้ซื้อกดดู</span>
       </label>
       <button className="primary" disabled={busy}>{busy ? "กำลังบันทึก…" : "บันทึกและเริ่มใช้งาน"}</button>
       {err && <p role="alert" style={{ color: "var(--warn)", margin: 0 }}>{err}</p>}

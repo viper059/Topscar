@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <footer className="site-foot">
           <div className="wrap">
-            © {new Date().getFullYear()} {BRAND} · <Link href="/privacy">นโยบายความเป็นส่วนตัว</Link> · <Link href="/vip">แพ็กเกจสำหรับเต็นท์รถ</Link>
+            © {new Date().getFullYear()} {BRAND} · <Link href="/terms">ข้อตกลงการใช้งาน</Link> · <Link href="/privacy">นโยบายความเป็นส่วนตัว</Link> · <Link href="/vip">แพ็กเกจสำหรับเต็นท์รถ</Link>
           </div>
         </footer>
       </body>

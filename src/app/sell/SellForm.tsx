@@ -171,7 +171,7 @@ export default function SellForm({ userId, province, plan }: { userId: string; p
         <p className="note">เบอร์และ LINE จะไม่อยู่บนหน้าประกาศ จะแสดงเมื่อผู้ซื้อกดดูเท่านั้น ประกาศแสดง 60 วัน ต่ออายุฟรีในหน้าบัญชีของฉัน แพ็กเกจปัจจุบัน: {plan === "free" ? "ฟรี (ลงพร้อมกันได้ 5 คัน)" : plan.toUpperCase()}</p>
         <label style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
           <input type="checkbox" required style={{ marginTop: 4 }} />
-          <span className="note">ยืนยันว่าเป็นเจ้าของรถหรือได้รับอนุญาตให้ขาย และข้อมูลเป็นความจริง</span>
+          <span className="note">ยืนยันว่าเป็นเจ้าของรถหรือได้รับอนุญาตให้ขาย ข้อมูลเป็นความจริง และแจ้งแล้วหากรถติดไฟแนนซ์หรือเล่มไม่อยู่กับผู้ขาย ตาม<a href="/terms" target="_blank">ข้อตกลงการใช้งาน</a></span>
         </label>
       </fieldset>
 

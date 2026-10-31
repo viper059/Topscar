@@ -11,6 +11,21 @@ export function flatRateLoan(price: number, downPct: number, years: number, rate
   return { financed, interest, monthly, monthlyWithVat: monthly * VAT };
 }
 
+/**
+ * Effective (declining-balance) annual rate of a flat-rate loan — the rate the OCPB caps apply to.
+ * Solves financed = monthly × (1 − (1+r)^−n) / r for the monthly rate r (VAT excluded), by bisection.
+ */
+export function effectiveRate(financed: number, monthly: number, months: number): number {
+  if (financed <= 0 || monthly * months <= financed) return 0;
+  const pv = (r: number) => (monthly * (1 - Math.pow(1 + r, -months))) / r;
+  let lo = 1e-9, hi = 0.1;
+  for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (pv(mid) > financed) lo = mid; else hi = mid; }
+  return lo * 12 * 100;
+}
+
+/** OCPB car hire-purchase caps on the effective rate (notification in force since 10 Jan 2023). */
+export const HP_CAP = { new: 10, used: 15 } as const;
+
 export const defaultRate = (l: Listing) => (l.cond === "new" ? 2.49 : 4.29);
 export const canFinance = (l: Listing) => l.pay.finance || l.pay.inhouse;
 export const downOf = (l: Listing) => (l.pay.freeDown ? 0 : l.pay.down ?? l.price * 0.25);
