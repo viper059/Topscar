@@ -73,7 +73,7 @@ export default async function Page({ params }: { params: Promise<P> }) {
       <section>
         <h2>{b.name} {m.model} ป้ายแดงที่ตัวแทนจำหน่ายลงขาย</h2>
         <CarGrid items={listings} empty={`ยังไม่มีประกาศ ${b.name} ${m.model} ป้ายแดงในตอนนี้ เป็นตัวแทนจำหน่ายหรือเต็นท์รถ? ลงประกาศฟรีได้เลย`} />
-        <p><Link href={hubPath({ cond: "new", brand: b.name, model: m.model })}>ดูประกาศ {b.name} {m.model} ทั้งหมด</Link> · <Link className="primary" href="/sell">ลงประกาศขายฟรี</Link></p>
+        <p><Link href={hubPath({ cond: "new", brand: b.name, model: m.model })}>ดูประกาศ {b.name} {m.model} ทั้งหมด</Link> · <Link className="primary" href={`/sell?catalog=${slugify(b.name)}/${ms}`}>ฉันมีรถรุ่นนี้ ลงประกาศขาย</Link></p>
       </section>
 
       {rivals.length > 0 && (

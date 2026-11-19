@@ -13,8 +13,10 @@ const GEARS = ["AT", "MT", "CVT"];
 
 type Photo = { file: File; url: string };
 
-export default function SellForm({ userId, province, plan }: { userId: string; province: string; plan: string }) {
-  const [cond, setCond] = useState<"used" | "new">("used");
+export type Prefill = { cond?: "new"; brand?: string; model?: string; body?: BodyType; fuel?: string; year?: number; hint?: number };
+
+export default function SellForm({ userId, province, plan, prefill = {} }: { userId: string; province: string; plan: string; prefill?: Prefill }) {
+  const [cond, setCond] = useState<"used" | "new">(prefill.cond ?? "used");
   const [payMode, setPayMode] = useState<"fin" | "cash">("fin");
   const [freeDown, setFreeDown] = useState(false);
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -99,17 +101,17 @@ export default function SellForm({ userId, province, plan }: { userId: string; p
           ))}
         </div>
         <div style={row2}>
-          <label style={lab}>ยี่ห้อ<input name="brand" className="field" list="brands" required maxLength={40} placeholder="เช่น Toyota" /></label>
-          <label style={lab}>รุ่น<input name="model" className="field" required maxLength={60} placeholder="เช่น Commuter" /></label>
+          <label style={lab}>ยี่ห้อ<input name="brand" className="field" list="brands" required maxLength={40} placeholder="เช่น Toyota" defaultValue={prefill.brand} /></label>
+          <label style={lab}>รุ่น<input name="model" className="field" required maxLength={60} placeholder="เช่น Commuter" defaultValue={prefill.model} /></label>
           <label style={lab}>รุ่นย่อย<input name="trim" className="field" maxLength={80} placeholder="เช่น 3.0 D4D หลังคาสูง" /></label>
-          <label style={lab}>ปีรถ<input name="year" className="field" type="number" required min={1970} max={new Date().getFullYear() + 1} defaultValue={2019} /></label>
+          <label style={lab}>ปีรถ<input name="year" className="field" type="number" required min={1970} max={new Date().getFullYear() + 1} defaultValue={prefill.year ?? 2019} /></label>
           {cond === "used" && <label style={lab}>เลขไมล์ (กม.)<input name="km" className="field" type="number" required min={0} max={2000000} placeholder="เช่น 120000" /></label>}
-          <label style={lab}>ประเภท<select name="body" className="field" defaultValue="van">{(Object.keys(BODY_TH) as BodyType[]).map((b) => <option key={b} value={b}>{BODY_TH[b]}</option>)}</select></label>
-          <label style={lab}>เชื้อเพลิง<select name="fuel" className="field">{FUELS.map((x) => <option key={x}>{x}</option>)}</select></label>
+          <label style={lab}>ประเภท<select name="body" className="field" defaultValue={prefill.body ?? "van"}>{(Object.keys(BODY_TH) as BodyType[]).map((b) => <option key={b} value={b}>{BODY_TH[b]}</option>)}</select></label>
+          <label style={lab}>เชื้อเพลิง<select name="fuel" className="field" defaultValue={prefill.fuel}>{FUELS.map((x) => <option key={x}>{x}</option>)}</select></label>
           <label style={lab}>เกียร์<select name="gear" className="field">{GEARS.map((x) => <option key={x}>{x}</option>)}</select></label>
           <label style={lab}>สีรถ<input name="color" className="field" type="color" defaultValue="#d8dbe0" style={{ height: 42, padding: 4 }} /></label>
           <label style={lab}>จังหวัดที่รถอยู่<select name="province" className="field" defaultValue={province}>{Object.entries(PROVINCES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
-          <label style={lab}>ราคา (บาท)<input name="price" className="field num" type="number" required min={10000} max={100000000} step={1000} value={price} onChange={(e) => setPrice(e.target.value)} placeholder="เช่น 650000" /></label>
+          <label style={lab}>ราคา (บาท)<input name="price" className="field num" type="number" required min={10000} max={100000000} step={1000} value={price} onChange={(e) => setPrice(e.target.value)} placeholder={prefill.hint ? `ราคาจริงของคุณ (ราคาแนะนำ ${prefill.hint.toLocaleString("th-TH")})` : "เช่น 650000"} /></label>
         </div>
         {priceN > 0 && <p className="note">แสดงเป็น ฿{baht(priceN)}</p>}
         <datalist id="brands">{BRANDS.map((b) => <option key={b} value={b} />)}</datalist>
