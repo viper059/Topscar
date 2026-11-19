@@ -13,7 +13,7 @@ const GEARS = ["AT", "MT", "CVT"];
 
 type Photo = { file: File; url: string };
 
-export type Prefill = { cond?: "new"; brand?: string; model?: string; body?: BodyType; fuel?: string; year?: number; hint?: number };
+export type Prefill = { cond?: "new"; brand?: string; model?: string; body?: BodyType; fuel?: string; year?: number; hint?: number; gear?: string; color?: string };
 
 export default function SellForm({ userId, province, plan, prefill = {} }: { userId: string; province: string; plan: string; prefill?: Prefill }) {
   const [cond, setCond] = useState<"used" | "new">(prefill.cond ?? "used");
@@ -24,6 +24,8 @@ export default function SellForm({ userId, province, plan, prefill = {} }: { use
   const [err, setErr] = useState<string | null>(null);
   const [price, setPrice] = useState("");
 
+  const [contact, setContact] = useState({ phone: "", line: "" });
+  useEffect(() => { try { const c = JSON.parse(localStorage.getItem("tops-contact") || "{}"); setContact({ phone: String(c.phone || ""), line: String(c.line || "") }); } catch {} }, []);
   useEffect(() => () => photos.forEach((p) => URL.revokeObjectURL(p.url)), [photos]);
 
   function addPhotos(list: FileList | null) {
@@ -47,6 +49,7 @@ export default function SellForm({ userId, province, plan, prefill = {} }: { use
     if (!cash && !fin && !inhouse) return setErr("เลือกอย่างน้อย 1 แบบ: ผ่อนผ่านไฟแนนซ์ หรือผ่อนกับร้าน");
     if (!s("phone") && !s("line")) return setErr("ใส่เบอร์โทรหรือ LINE ID อย่างน้อย 1 อย่าง");
 
+    try { localStorage.setItem("tops-contact", JSON.stringify({ phone: s("phone"), line: s("line") })); } catch {}
     const db = sb();
     try {
       setBusy("กำลังบันทึกข้อมูลรถ…");
@@ -108,8 +111,8 @@ export default function SellForm({ userId, province, plan, prefill = {} }: { use
           {cond === "used" && <label style={lab}>เลขไมล์ (กม.)<input name="km" className="field" type="number" required min={0} max={2000000} placeholder="เช่น 120000" /></label>}
           <label style={lab}>ประเภท<select name="body" className="field" defaultValue={prefill.body ?? "van"}>{(Object.keys(BODY_TH) as BodyType[]).map((b) => <option key={b} value={b}>{BODY_TH[b]}</option>)}</select></label>
           <label style={lab}>เชื้อเพลิง<select name="fuel" className="field" defaultValue={prefill.fuel}>{FUELS.map((x) => <option key={x}>{x}</option>)}</select></label>
-          <label style={lab}>เกียร์<select name="gear" className="field">{GEARS.map((x) => <option key={x}>{x}</option>)}</select></label>
-          <label style={lab}>สีรถ<input name="color" className="field" type="color" defaultValue="#d8dbe0" style={{ height: 42, padding: 4 }} /></label>
+          <label style={lab}>เกียร์<select name="gear" className="field" defaultValue={prefill.gear}>{GEARS.map((x) => <option key={x}>{x}</option>)}</select></label>
+          <label style={lab}>สีรถ<input name="color" className="field" type="color" defaultValue={prefill.color ?? "#d8dbe0"} style={{ height: 42, padding: 4 }} /></label>
           <label style={lab}>จังหวัดที่รถอยู่<select name="province" className="field" defaultValue={province}>{Object.entries(PROVINCES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
           <label style={lab}>ราคา (บาท)<input name="price" className="field num" type="number" required min={10000} max={100000000} step={1000} value={price} onChange={(e) => setPrice(e.target.value)} placeholder={prefill.hint ? `ราคาจริงของคุณ (ราคาแนะนำ ${prefill.hint.toLocaleString("th-TH")})` : "เช่น 650000"} /></label>
         </div>
@@ -168,8 +171,8 @@ export default function SellForm({ userId, province, plan, prefill = {} }: { use
       <fieldset className="box" disabled={!!busy}>
         <h2>ช่องทางติดต่อ</h2>
         <div style={row2}>
-          <label style={lab}>เบอร์โทร<input name="phone" className="field" type="tel" inputMode="tel" maxLength={20} placeholder="08x-xxx-xxxx" /></label>
-          <label style={lab}>LINE ID<input name="line" className="field" maxLength={40} placeholder="ไม่บังคับ" /></label>
+          <label style={lab}>เบอร์โทร<input key={`p${contact.phone}`} defaultValue={contact.phone} name="phone" className="field" type="tel" inputMode="tel" maxLength={20} placeholder="08x-xxx-xxxx" /></label>
+          <label style={lab}>LINE ID<input key={`l${contact.line}`} defaultValue={contact.line} name="line" className="field" maxLength={40} placeholder="ไม่บังคับ" /></label>
         </div>
         <p className="note">เบอร์และ LINE จะไม่อยู่บนหน้าประกาศ จะแสดงเมื่อผู้ซื้อกดดูเท่านั้น ประกาศแสดง 60 วัน ต่ออายุฟรีในหน้าบัญชีของฉัน แพ็กเกจปัจจุบัน: {PLAN_LABEL[plan as keyof typeof PLAN_LABEL] ?? plan.toUpperCase()}</p>
         <label style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>

@@ -10,19 +10,21 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "ลงประกาศขายรถฟรี", robots: { index: false, follow: true } };
 
 /** /sell?catalog=brand/model prefills the form from the price catalog. Price is never prefilled: the seller enters their own real price. */
-function fromCatalog(q?: string): Prefill {
+const COLORS: Record<string, string> = { white: "#f4f4f2", silver: "#c4c8ce", gray: "#8a8f96", black: "#1c1c1e" };
+function fromCatalog(q?: string, gear?: string, color?: string): Prefill {
   const [b, m] = (q || "").split("/");
   const brand = b && brandBySlug(slugify(b));
   const model = brand && m ? modelBySlug(brand, slugify(m)) : undefined;
   if (!brand || !model) return {};
-  return { cond: "new", brand: brand.name, model: model.model, body: model.body, fuel: model.fuel, year: new Date().getFullYear(), hint: model.from };
+  return { cond: "new", brand: brand.name, model: model.model, body: model.body, fuel: model.fuel, year: new Date().getFullYear(), hint: model.from, ...(gear === "AT" || gear === "MT" || gear === "CVT" ? { gear } : {}), ...(color && COLORS[color] ? { color: COLORS[color] } : {}) };
 }
 
-export default async function Sell({ searchParams }: { searchParams: Promise<{ catalog?: string }> }) {
-  const prefill = fromCatalog((await searchParams).catalog);
+export default async function Sell({ searchParams }: { searchParams: Promise<{ catalog?: string; gear?: string; color?: string }> }) {
+  const sp = await searchParams;
+  const prefill = fromCatalog(sp.catalog, sp.gear, sp.color);
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return <ComingSoon title="ลงประกาศขายรถฟรี" text="ยังไม่ได้ต่อฐานข้อมูล ตั้งค่า Supabase ก่อน" />;
   const me = await currentProfile();
-  if (!me) redirect(`/login?next=${encodeURIComponent(prefill.brand ? `/sell?catalog=${slugify(prefill.brand)}/${slugify(prefill.model!)}` : "/sell")}`);
+  if (!me) redirect(`/login?next=${encodeURIComponent(sp.catalog ? `/sell?${new URLSearchParams(Object.entries(sp).filter(([, v]) => typeof v === "string") as [string, string][])}` : "/sell")}`);
   if (!me.profile) redirect("/account?next=/sell");
   return (
     <main className="wrap section" style={{ display: "grid", gap: 14 }}>
