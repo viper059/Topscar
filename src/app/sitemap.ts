@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { findListings } from "@/lib/data";
+import { CATALOG, catalogPath } from "@/lib/catalog";
 import { abs, hubPath, hubsFor, listingPath } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +15,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: abs("/vip"), changeFrequency: "monthly", priority: 0.4 },
     { url: abs("/terms"), changeFrequency: "yearly", priority: 0.2 },
     { url: abs("/privacy"), changeFrequency: "yearly", priority: 0.2 },
+    { url: abs(catalogPath()), changeFrequency: "weekly", priority: 0.7 },
+    ...CATALOG.flatMap((b) => [
+      { url: abs(catalogPath(b.name)), changeFrequency: "weekly" as const, priority: 0.6 },
+      ...b.models.map((m) => ({ url: abs(catalogPath(b.name, m.model)), changeFrequency: "weekly" as const, priority: 0.5 })),
+    ]),
     ...hubsFor(live).map((h) => ({ url: abs(hubPath(h)), lastModified: latest(live), changeFrequency: "daily" as const, priority: h.model ? 0.7 : 0.8 })),
     ...items.map((l) => ({
       url: abs(listingPath(l)),

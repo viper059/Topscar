@@ -31,6 +31,7 @@ export default async function Home() {
           <p style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap" }}>
             <Link className="primary" href="/used-cars">ดูรถมือสองทั้งหมด</Link>
             <Link className="primary" href="/new-cars">ดูรถใหม่ป้ายแดงทั้งหมด</Link>
+            <Link className="primary" href="/new-car-prices">ราคารถใหม่ทุกยี่ห้อ</Link>
           </p>
         </section>
         <HubLinks items={all} />
